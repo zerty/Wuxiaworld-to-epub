@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+package wuxiaworld.api.v2;
+
+message DecimalValue {
+	int64 units = 1;
+	sfixed32 nanos = 2;
+};
+
+message ByNovelAndChapterSlug {
+	string novelSlug = 1;
+	string chapterSlug = 2;	
+};
+
+message GetChapterByProperty {
+	oneof byProperty {
+		int32 chapterId = 1;
+		ByNovelAndChapterSlug slugs = 2;
+	};
+};
+
+message GetChapterRequest {
+	GetChapterByProperty chapterProperty = 1;
+};
+
+message GetChapterResponse {
+	ChapterItem item = 1;	
+};
+
+message ChapterItem {
+	int32 entityId = 1;
+	string name = 2;
+	string slug = 3;
+	DecimalValue number = 4;
+	google.protobuf.StringValue content = 5;
+	int32 novelId = 6;
+	bool visible = 7;
+	bool isTeaser = 8;
+	google.protobuf.Timestamp whenToPublish = 9;
+	bool spoilerTitle = 10;
+	bool allowComments = 11;
+	bytes relatedChapterInfo = 12;
+	bytes karmaInfo = 13;
+	bytes novelInfo = 14;
+	bytes sponsorInfo = 15;
+	bytes relatedUserInfo = 16;
+	int32 offset = 17;
+	google.protobuf.Timestamp publishedAt = 18;
+	google.protobuf.StringValue translatorThoughts = 19;
+};
+
+message GetChapterListRequest{
+	int32 novelId = 1;
+	FilterChapters filter = 2;
+};
+
+message FilterChapters{
+	google.protobuf.Int32Value chapterGroupId = 1;
+	google.protobuf.BoolValue isAdvanceChapter = 2;
+}
+
+message GetChapterListResponse {
+	repeated ChapterGroupItem items = 1;
+	ChapterNovelInfo novelInfo = 2;
+};
+
+message ChapterGroupItem {
+	int32 id = 1;
+	string title = 2;
+	int32 order = 3;
+	DecimalValue fromChapterNumber = 4;
+	DecimalValue toChapterNumber = 5;
+	repeated ChapterItem chapterList = 6;
+};
+
+message ChapterNovelInfo{
+	int32 id = 1;
+	string name = 2;
+	google.protobuf.StringValue coverUrl = 3;
+	string slug = 4;
+	bytes karmaInfo = 5;
+	bool isSneakPeek = 6;
+	bytes  translatorInfo = 7;
+	google.protobuf.StringValue language = 8;
+	google.protobuf.StringValue coverBlurHash = 9;
+};
+
+
+service Chapters {
+	rpc GetChapter (GetChapterRequest) returns (GetChapterResponse) {};
+	rpc GetChapterList (GetChapterListRequest) returns (GetChapterListResponse) {};
+}

@@ -97,4 +97,5 @@ def run(_name,bybook=False):
 
 if __name__ == '__main__':
     logging.basicConfig()
+    # use the last element of the novel url to grab it ex: https://www.wuxiaworld.com/novel/absolute-resonance would be absolute-resonance
     run("against-the-gods",bybook=True)

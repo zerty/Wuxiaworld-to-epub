@@ -9,10 +9,9 @@ import html
 from time import sleep
 import random
 
-import chapter2_pb2
-import chapter2_pb2_grpc
-import novel_pb2
-import novel_pb2_grpc
+import wuxiaworld_v2_pb2
+import wuxiaworld_v2_pb2_grpc
+
 
 
 from google.protobuf import wrappers_pb2 
@@ -22,17 +21,17 @@ from epub import *
 
 
 def get_chapter_content(stub,novel,chapter):
-    chapterreq=chapter2_pb2.GetChapterRequest(chapterProperty=chapter2_pb2.GetChapterByProperty(slugs=chapter2_pb2.ByNovelAndChapterSlug(novelSlug=novel ,chapterSlug=chapter)))
+    chapterreq=wuxiaworld_v2_pb2.GetChapterRequest(chapterProperty=wuxiaworld_v2_pb2.GetChapterByProperty(slugs=wuxiaworld_v2_pb2.ByNovelAndChapterSlug(novelSlug=novel ,chapterSlug=chapter)))
     feature = stub.GetChapter(chapterreq)
     return str(feature.item.content.value)
 
 def get_novel_info(stub,name):
-    novelreq=novel_pb2.GetNovelRequest(slug=name)
+    novelreq=wuxiaworld_v2_pb2.GetNovelRequest(slug=name)
     feature=stub.GetNovel(novelreq)
     return feature
 
 def get_chapter_list(stub,id):
-    clistreq=chapter2_pb2.GetChapterListRequest(novelId = id)
+    clistreq=wuxiaworld_v2_pb2.GetChapterListRequest(novelId = id)
     feature=stub.GetChapterList(clistreq)
     return feature
 
@@ -44,10 +43,15 @@ def run(_name,bybook=False):
 
     #use sonora client
     with sonora.client.insecure_web_channel(f"http://api.wuxiaworld.com") as channel:
-    
-        # create stub for grpc access
-        chapstub = chapter2_pb2_grpc.ChaptersStub(channel)
-        novelstub= novel_pb2_grpc.NovelsStub(channel)
+        channel._metadata = [
+            ("Origin","https://www.wuxiaworld.com"),
+            ("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0"),
+            ("content-type", "application/grpc-web+proto"),
+        ]
+        
+                # create stub for grpc access
+        chapstub = wuxiaworld_v2_pb2_grpc.ChaptersStub(channel)
+        novelstub= wuxiaworld_v2_pb2_grpc.NovelsStub(channel)
 
         # get novel information
         novelinfo=get_novel_info(novelstub,_name)
@@ -87,15 +91,20 @@ def run(_name,bybook=False):
                 fullhtml.append([filename,chapterlist.items[i].chapterList[j].name])
             
             if(bybook and (update or not os.path.exists(os.path.join("output",bookname)  + ".epub"))):
-                print("  - Creating Updating Ebook {}".format(bookname))
+                print("  - Creating or Updating Ebook {}".format(bookname))
                 generate_epub(htmls,bookname ,author,cover)
 
         print("  Total New chapters : {}".format(nbnewchap))
         if ((nbnewchap>0 or  not os.path.exists(os.path.join("output",_name)  + ".epub")) and not (bybook)):
-            print("  - Creating Updating Full Ebook")
+            print("  - Creating or Updating Full Ebook")
             generate_epub(fullhtml,_name ,author,cover)
 
 if __name__ == '__main__':
     logging.basicConfig()
-    # use the last element of the novel url to grab it ex: https://www.wuxiaworld.com/novel/absolute-resonance would be absolute-resonance
+    run("immortal-devil-transformation",bybook=True)
+    run("keyboard-immortal",bybook=True)
+    run("emperors-domination",bybook=True)
+    run("nine-star-hegemon",bybook=True)
     run("against-the-gods",bybook=True)
+    run("overgeared",bybook=True)
+    run("second-life-ranker",bybook=True)

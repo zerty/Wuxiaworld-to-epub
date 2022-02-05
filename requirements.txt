@@ -1,7 +1,5 @@
 beautifulsoup4==4.6.0
-bs4==0.0.1
 grpcio==1.43.0
-grpcio-tools==1.43.0
 protobuf==3.19.3
 sonora==0.2.2
 urllib3==1.26.8

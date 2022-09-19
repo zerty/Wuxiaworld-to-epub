@@ -28,6 +28,7 @@ class WebChannel:
         self._session = uc.Chrome()
         self._session.get('https://api2.wuxiaworld.com')
         #self._session.error_handler=ErrorHandlerEdit()
+        
 
 
     def __enter__(self):

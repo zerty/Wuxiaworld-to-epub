@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
 
     channel=sonora.client.insecure_web_channel(f"https://api2.wuxiaworld.com")
-    
+    sleep(10)
    
 
 

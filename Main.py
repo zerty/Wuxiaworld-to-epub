@@ -84,8 +84,8 @@ def run(_name,bybook=False):
         for j in range(0,len(chapterlist.items[i].chapterList)):
             filename = os.path.join(_name,"chapter_"+str(f'{i:04}')+"-"+str(f'{j:04}')+".xhtml")
             if (not os.path.exists(filename) or os.path.getsize(filename)<4*1024):
+                sleep(0.5+random.random()*2)
                 if (os.path.exists(filename)) : os.remove(filename) 
-                sleep(0.1+(random.random()*0.1))
                 chapter=get_chapter_content(chapstub,novelinfo.item.slug,chapterlist.items[i].chapterList[j].slug)
                 if (len(chapter.item.content.value) >0):
                     content=html.unescape(str(chapter.item.content.value)).replace(u'\xa0', u' ')
@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
 
     channel=sonora.client.insecure_web_channel(f"https://api2.wuxiaworld.com")
-    sleep(10)
+    sleep(7)
    
 
 

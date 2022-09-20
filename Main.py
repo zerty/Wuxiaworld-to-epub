@@ -4,7 +4,7 @@ from __future__ import print_function
 import logging
 import os
 import os.path
-import sonora.client
+#import sonora.client
 import html
 from time import sleep
 import random
@@ -18,6 +18,8 @@ from google.protobuf import wrappers_pb2
 
 
 from epub import *
+from scrpcweb import *
+
 
 
 def get_chapter_content(stub,novel,chapter):
@@ -112,14 +114,16 @@ if __name__ == '__main__':
     logging.basicConfig()
 
 
-    channel=sonora.client.insecure_web_channel(f"https://api2.wuxiaworld.com")
-    sleep(7)
-   
+    #channel=sonora.client.insecure_web_channel(f"https://api2.wuxiaworld.com")
+    #sleep(7)
+    channel=insecure_web_channel(f"https://api2.wuxiaworld.com")
+    
+
 
 
     run("keyboard-immortal",bybook=True)
-    run("emperors-domination",bybook=False)
-    run("nine-star-hegemon",bybook=True)
-    run("overgeared",bybook=False)
-    run("star-odyssey",bybook=True)
-    run("necropolis-immortal",bybook=True)
+    # run("emperors-domination",bybook=False)
+    # run("nine-star-hegemon",bybook=True)
+    # run("overgeared",bybook=False)
+    # run("star-odyssey",bybook=True)
+    # run("necropolis-immortal",bybook=True)

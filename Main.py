@@ -83,6 +83,7 @@ def run(_name,bybook=False):
         htmls=[]
         update=False
         bookname=novelinfo.item.name+'-'+chapterlist.items[i].title.replace(":","")
+        print(f"\t* Grabbing from {chapterlist.items[i].title}")
         for j in range(0,len(chapterlist.items[i].chapterList)):
             filename = os.path.join(_name,"chapter_"+str(f'{i:04}')+"-"+str(f'{j:04}')+".xhtml")
             if (not os.path.exists(filename) or os.path.getsize(filename)<4*1024):
@@ -90,19 +91,21 @@ def run(_name,bybook=False):
                 if (os.path.exists(filename)) : os.remove(filename) 
                 chapter=get_chapter_content(chapstub,novelinfo.item.slug,chapterlist.items[i].chapterList[j].slug)
                 if (len(chapter.item.content.value) >0):
+                    print(f"\t\t- Grabbed {chapterlist.items[i].chapterList[j].name} ")
                     content=html.unescape(str(chapter.item.content.value)).replace(u'\xa0', u' ')
                     makechapter(chapterlist.items[i].chapterList[j].name,content,filename)
                     nbnewchap+=1
                     htmls.append([filename,chapterlist.items[i].chapterList[j].name])
                     fullhtml.append([filename,chapterlist.items[i].chapterList[j].name])
                     update=True
-
+                else:
+                    print(f"\t\t- Grabbed {chapterlist.items[i].chapterList[j].name} => Empty")
             else:        
                 htmls.append([filename,chapterlist.items[i].chapterList[j].name])
                 fullhtml.append([filename,chapterlist.items[i].chapterList[j].name])
         
         if(bybook and (update or not os.path.exists(os.path.join("output",bookname)  + ".epub"))):
-            print("  - Creating or Updating Ebook {}".format(bookname))
+            print("  ->Creating or Updating Ebook {}".format(bookname))
             generate_epub(htmls,bookname ,author,cover)
 
     print(" Total chapters: {},  Total New chapters : {}".format(str(len(fullhtml)),nbnewchap))
@@ -122,8 +125,8 @@ if __name__ == '__main__':
 
 
     run("keyboard-immortal",bybook=True)
-    # run("emperors-domination",bybook=False)
-    # run("nine-star-hegemon",bybook=True)
-    # run("overgeared",bybook=False)
-    # run("star-odyssey",bybook=True)
-    # run("necropolis-immortal",bybook=True)
+    run("emperors-domination",bybook=False)
+    run("nine-star-hegemon",bybook=True)
+    run("overgeared",bybook=False)
+    run("star-odyssey",bybook=True)
+    run("necropolis-immortal",bybook=True)

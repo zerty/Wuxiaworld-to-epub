@@ -83,7 +83,7 @@ def run(_name,bybook=False):
         htmls=[]
         update=False
         bookname=novelinfo.item.name+'-'+chapterlist.items[i].title.replace(":","")
-        print(f"\t* Grabbing from {chapterlist.items[i].title}")
+        
         for j in range(0,len(chapterlist.items[i].chapterList)):
             filename = os.path.join(_name,"chapter_"+str(f'{i:04}')+"-"+str(f'{j:04}')+".xhtml")
             if (not os.path.exists(filename) or os.path.getsize(filename)<4*1024):
@@ -91,7 +91,7 @@ def run(_name,bybook=False):
                 if (os.path.exists(filename)) : os.remove(filename) 
                 chapter=get_chapter_content(chapstub,novelinfo.item.slug,chapterlist.items[i].chapterList[j].slug)
                 if (len(chapter.item.content.value) >0):
-                    print(f"\t\t- Grabbed {chapterlist.items[i].chapterList[j].name} ")
+                    print(f"\t- Grabbed {chapterlist.items[i].title} - {chapterlist.items[i].chapterList[j].name} ")
                     content=html.unescape(str(chapter.item.content.value)).replace(u'\xa0', u' ')
                     makechapter(chapterlist.items[i].chapterList[j].name,content,filename)
                     nbnewchap+=1
@@ -99,7 +99,8 @@ def run(_name,bybook=False):
                     fullhtml.append([filename,chapterlist.items[i].chapterList[j].name])
                     update=True
                 else:
-                    print(f"\t\t- Grabbed {chapterlist.items[i].chapterList[j].name} => Empty")
+                    print(f"\t- Grabbed {chapterlist.items[i].title} - {chapterlist.items[i].chapterList[j].name} => Empty")
+                    break
             else:        
                 htmls.append([filename,chapterlist.items[i].chapterList[j].name])
                 fullhtml.append([filename,chapterlist.items[i].chapterList[j].name])

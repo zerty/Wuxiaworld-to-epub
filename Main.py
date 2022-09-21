@@ -12,7 +12,6 @@ import random
 import wuxiaworld_v2_pb2
 import wuxiaworld_v2_pb2_grpc
 
-from seleniumwire.undetected_chromedriver.v2 import Chrome, ChromeOptions
 
 from google.protobuf import wrappers_pb2 
 
@@ -121,6 +120,7 @@ if __name__ == '__main__':
     #channel=sonora.client.insecure_web_channel(f"https://api2.wuxiaworld.com")
     #sleep(7)
     channel=insecure_web_channel(f"https://api2.wuxiaworld.com")
+
     
 
 

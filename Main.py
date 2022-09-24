@@ -45,18 +45,8 @@ def run(_name,bybook=False):
         os.makedirs(_name)
 
 
-    #use sonora client
-    # channel._metadata = [
-    #     ("Origin","https://www.wuxiaworld.com"),
-    #     ("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:103.0) Gecko/20100101 Firefox/103.0"),
-    #     ("content-type", "application/grpc-web+proto"),
-    #     ("authorization",""),
-    #     ("x-grpc-web", "1")
-    # ]
 
-    # create stub for grpc access
-    chapstub = wuxiaworld_v2_pb2_grpc.ChaptersStub(channel)
-    novelstub= wuxiaworld_v2_pb2_grpc.NovelsStub(channel)
+    
 
     # get novel information
     novelinfo=get_novel_info(novelstub,_name)
@@ -121,8 +111,21 @@ if __name__ == '__main__':
     #sleep(7)
     channel=insecure_web_channel(f"https://api2.wuxiaworld.com")
 
-    
+    # channel._metadata.extend([
+    #     ("Origin","https://www.wuxiaworld.com"),
+    #     ("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:103.0) Gecko/20100101 Firefox/103.0"),
+    #     ("content-type", "application/grpc-web+proto"),
+    #     ("authorization",""),
+    #     ("x-grpc-web", "1")
+    # ] ) 
 
+
+    #Uncomment and add bearrer token 
+    #channel._metadata.append(("authorization","Bearer 6E5A2932FA94D66C4BBE18922FF095E....................."))
+
+    # create stub for grpc access
+    chapstub = wuxiaworld_v2_pb2_grpc.ChaptersStub(channel)
+    novelstub= wuxiaworld_v2_pb2_grpc.NovelsStub(channel)
 
 
     run("keyboard-immortal",bybook=True)

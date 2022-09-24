@@ -60,13 +60,15 @@ class UnaryUnaryMulticallable:
             self.call_metadata.extend(self.encode_headers(metadata))
         if timeout is not None:
             self.call_metadata.append(("grpc-timeout", protocol.serialize_timeout(timeout)))
-        self._response=self._session.execute_script("""
+        _js="""
             var payload=new Uint8Array(%s);
-            var resp = await fetch ('%s',{ method: 'POST',  redirect: 'follow',  headers: { 'content-type': 'application/grpc-web+proto'}, body:payload});
+            var resp = await fetch ('%s',{ method: 'POST',  redirect: 'follow',  headers: %s, body:payload});
             var data= await resp.arrayBuffer();
             var datauint = new Uint8Array(data);
             return datauint;
-        """%(list(self.wrap_message(False, False, self._serializer(self._request))),self._rpc_url))
+        """%(list(self.wrap_message(False, False, self._serializer(self._request))),self._rpc_url,str(dict(self.call_metadata)))
+        #print(_js)
+        self._response=self._session.execute_script(_js)
         buffer = io.BytesIO(bytes(list(self._response)))
         messages = self.unwrap_message_stream(buffer)
         trailers, _, message = next(messages)
@@ -119,3 +121,4 @@ class UnaryUnaryMulticallable:
                 break
 
             data = stream.read(_HEADER_LENGTH)
+
